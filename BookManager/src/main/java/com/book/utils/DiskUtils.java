@@ -29,6 +29,7 @@ public class DiskUtils {
 	public static String getSerialNumber(String drive) {
 		String result = "";
 		try {
+			String a = "";
 			File file = File.createTempFile("damn", ".vbs");
 			file.deleteOnExit();
 			FileWriter fw = new java.io.FileWriter(file);
