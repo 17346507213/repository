@@ -23,13 +23,12 @@ public class SysUserServiceImpl implements SysUserService {
 	@Autowired
 	private SysUserMapper sysUserMapper;
 	@Override
-	public boolean login(String loginName, String password) {
+	public Map<String,Object> login(String loginName, String password) {
 		Map<String,Object> user = this.sysUserMapper.getUserByLoginName(loginName);
-		System.out.println(user);
 		if(user!=null && user.get("password").equals(password)){
-			return true;
+			return user;
 		}
-		return false;
+		return null;
 	}
 
 }

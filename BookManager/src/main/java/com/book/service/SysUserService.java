@@ -20,6 +20,6 @@ public interface SysUserService {
 	 * @param password
 	 * @return
 	 */
-	public boolean login(String loginName,String password);
+	public Map<String,Object> login(String loginName,String password);
 	
 }

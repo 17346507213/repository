@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" isELIgnored="false"%>
 <%
-    String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort() +request.getContextPath()+"/";
+String basePath = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort()
++ request.getContextPath() + "/";
 %>
 <!DOCTYPE html>
 <html>
@@ -16,44 +17,91 @@
 	<script type="text/javascript" src="<%=basePath %>/static/js/easyui/jquery.easyui.min.js"></script>
 	<script type="text/javascript" src="<%=basePath %>/static/js/jsonHandler.js"></script>
 </head>
-<body>
-	
-	<div id="win">
-		<center style="padding-top: 30px">
-			<p><label>用户名：</label><input type="text" name="loginName"/></p>
-			<p><label>密&nbsp;&nbsp;码：</label><input name="password" type="password"/></p>
-			<a id="loginBtn" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">登陆</a>&nbsp;&nbsp;&nbsp;&nbsp;
-			<a id="btn" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-no'">取消</a>
-		</center>
+<body style="overflow-y:hidden;">
+
+<div style="margin-top: 100px;margin-bottom: 100px;background:#4F92ED;">
+	<div style="background:url('<%=basePath %>static/images/login01.jpg') no-repeat;width:900px;height:441px;">
+		<div id="panel" class="easyui-panel" title="登陆" style="background:#fafafa;width:400px;height:341px;" data-options="iconCls:'icon-login',style:{position:'absolute',left:600,top:200}">
+			<center style="padding-top: 30px;">
+				<form  id="loginFrom">
+				<p><label>用户名：</label><input type="text" name="loginName"/></p>
+				<p><label>密&nbsp;&nbsp;&nbsp;码：</label><input name="password" type="password" /></p>
+				<p><label>验证码：</label>			<input name="authCode" type="text"  />
+				<p><img type="image" src="<%=basePath %>/auth/code" id="codeImage"  style="cursor:pointer;"/>
+				<a id="codeSwitch" href="javascript:void(0)">换一张</a></p>
+				</p>
+				<a id="loginBtn" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">登陆</a>&nbsp;&nbsp;&nbsp;&nbsp;
+				<a id="btn" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-user'">注册</a>
+				<p>
+					<span style="color:red;">${requestScope.loginMessage }</span>
+				</p>
+				</form>
+			</center>
+		</div>
 	</div>
+</div>
 	<script type="text/javascript">
 	$(function(){
-		$('#win').window({    
-		    width:300,    
-		    height:200,    
-		    modal:true,
-		    title:"登陆",
-		     resizable:false,
-		     collapsible:false
-		}); 	
+		
+		//换一张验证码
+		$("#codeSwitch").click(function(){
+			$("#codeImage").attr("src",'<%=basePath %>/auth/code?time=' + new Date().getTime());
+			
+		});	
 		$("#loginBtn").click(function(){
-			$.ajax({
-				url:'<%=basePath%>/sysUser/login.do',
-				data:{loginName:$("input[name=loginName]").val(),password:$("input[name=password]").val()},
-				dataType:'json',
-				type:'post',
-				success:function(result){
-					if(result){
-						window.location.href="<%=basePath%>/pages/login/main.jsp"; 
+				var loginName = $("input[name=loginName]").val();
+				var password = $("input[name=password]").val();
+				var authCode = $("input[name=authCode]").val();
+				loginName = loginName ? loginName.trim() :"";
+				password = password ? password.trim() :"";
+				authCode = authCode ? authCode.trim() :"";
+				if(loginName){
+					if(password){
+						if(authCode){
+							$.ajax({
+								url:'<%=basePath%>/auth/getCurrentCode',
+								success:function(code){
+									if(code==authCode.toLowerCase()){
+										$.ajax({
+											url:'<%=basePath%>/sysUser/login.do',
+											type : 'post',
+											data:{loginName:$("input[name=loginName]").val(),password:$("input[name=password]").val(),code:authCode},
+											success:function(result){
+												if(result=="ok"){//登陆成功
+													window.location.href="<%=basePath%>/pages/login/main.jsp"; 
+												}else if(result=="userMsg"){
+													$.messager.alert("系统提示","用户名或密码错误！","error",function(){
+														$("input[name=loginName]").val("");
+														$("input[name=password]").val("");
+														$("input[name=loginName]").focus();
+													});
+												}else{
+													$("#codeSwitch").click();
+													$.messager.alert("系统提示","验证码错误！","error",function(){
+														$("input[name=authCode]").val("");
+														$("input[name=authCode]").focus();
+													});
+												}
+											}
+										});
+									}else{
+										$("#codeSwitch").click();
+										$.messager.alert("系统提示","验证码错误！","error",function(){
+											$("input[name=authCode]").val("");
+											$("input[name=authCode]").focus();
+										});
+									}
+								}
+							});
+						}else{
+							$.messager.alert("系统提示","请填写验证码！");
+						}
 					}else{
-						$.messager.alert("系统提示","用户名或密码错误！","error",function(){
-							$("input[name=loginName]").val("");
-							$("input[name=password]").val("");
-							$("input[name=loginName]").focus();
-						});
+						$.messager.alert("系统提示","请填写密码！");
 					}
+				}else{
+					$.messager.alert("系统提示","请填写用户名！");
 				}
-			})	  
 		});
 		
 	});
