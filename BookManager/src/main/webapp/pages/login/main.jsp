@@ -10,7 +10,7 @@
 <base href="<%=basePath%>">
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<title>登录</title>
+<title>系统首页</title>
 <!-- 导入easyui的资源文件 -->
 <link rel="stylesheet" type="text/css"
 	href="<%=basePath%>/static/js/easyui/themes/default/easyui.css">
@@ -52,19 +52,20 @@
  			lines:true,
  			animate:true,
  			onClick:function(node){
- 				var flag = $("#centerTabs").tabs("exists",node.text);
- 				if(!flag){
- 					if(node.href){
- 						$("#centerTabs").tabs("add",{
- 		 					title:node.text,
- 		 					iconCls:node.iconCls,
- 		 					closable:true,
- 		 					href:"<%=basePath%>/" + node.href
-						});
-					}
-				} else {
-					$("#centerTabs").tabs("select", node.text);
-				}
+ 				if(node.href){
+ 					var flag = $("#centerTabs").tabs("exists",node.text);
+ 	 				if(!flag){
+ 	 					  var content = "<iframe scrolling='no' frameborder='0'  src='"+node.href+"' style='width:100%;height:99%;'></iframe>";  
+ 					         $("#centerTabs").tabs('add',{  
+ 					            title:node.text,  
+ 					            closable:true,  
+ 					            content:content,  
+ 					            iconCls:node.iconCls  
+ 					        });  
+ 					} else {
+ 						$("#centerTabs").tabs("select", node.text);
+ 					}	
+ 				}
 			},
 			onLoadSuccess : function(node, data) {
 				var t = $(this);
