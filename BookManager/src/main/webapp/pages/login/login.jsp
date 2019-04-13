@@ -30,11 +30,7 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 				<p><img type="image" src="<%=basePath %>/auth/code" id="codeImage"  style="cursor:pointer;"/>
 				<a id="codeSwitch" href="javascript:void(0)">换一张</a></p>
 				</p>
-				<a id="loginBtn" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'">登陆</a>&nbsp;&nbsp;&nbsp;&nbsp;
-				<a id="btn" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-user'">注册</a>
-				<p>
-					<span style="color:red;">${requestScope.loginMessage }</span>
-				</p>
+				<a id="loginBtn" href="javascript:void(0)" class="easyui-linkbutton" style="width:150px;height:30px;margin-left: 50px;" data-options="iconCls:'icon-ok'">&nbsp;登  陆&nbsp;&nbsp;</a>
 				</form>
 			</center>
 		</div>
@@ -42,7 +38,16 @@ String basePath = request.getScheme() + "://" + request.getServerName() + ":" + 
 </div>
 	<script type="text/javascript">
 	$(function(){
-		
+		$("input[name=password]").keyup(function(event){
+			  if(event.keyCode ==13){
+				  $("#loginBtn").click();
+			  }
+			});
+		$("input[name=authCode]").keyup(function(event){
+			  if(event.keyCode ==13){
+				  $("#loginBtn").click();
+			  }
+			});
 		//换一张验证码
 		$("#codeSwitch").click(function(){
 			$("#codeImage").attr("src",'<%=basePath %>/auth/code?time=' + new Date().getTime());

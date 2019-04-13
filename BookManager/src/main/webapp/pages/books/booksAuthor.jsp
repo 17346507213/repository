@@ -31,7 +31,13 @@
 			url:'<%=basePath%>/booksAuthor/getAllBooksAuthorByPage.do',
 			columns:[[{checkbox:true},
 				{field:"authorName",title:"姓名",width:100,align:'center'},
-				{field:"authorSex",title:"性别",width:50,align:'center'},
+				{field:"authorSex",title:"性别",width:50,align:'center',formatter:function(value,row,index){
+					if(value=="1"){
+						return "男";
+					}else{
+						return "女";
+					}
+				}},
 				{field:"authorNationality",title:"国籍",width:100,align:'center'},
 				{field:"authorProfile",title:"简介",width:'200',align:'center'}
 				]],
@@ -43,7 +49,7 @@
 				{iconCls:'icon-add',text:"添加作者",handler:function(){
 					$('#menuForm').form('reset');
 					$("#typeAdd").window({
-						width:600,
+						width:400,
 						height:350,
 						title:"添加作者",
 						iconCls:"icon-add",
@@ -96,7 +102,7 @@
 				if(rows.length==1){
 					$("#menuForm").form("reset");
 					$("#typeAdd").window({
-						width:600,
+						width:400,
 						height:400,
 						title:"修改作者",
 						iconCls:"icon-add",
@@ -121,7 +127,7 @@
 				</div>
 				<div style="margin-right: 75px;">
 					<label for="menu_name">性别:</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<input type="radio" name="authorSex" value="1"/>男
+					<input type="radio" name="authorSex" value="1" checked="checked"/>男
 					<input type="radio" name="authorSex" value="0"/>女
 				</div>
 				<div style="margin:10px auto;">
@@ -129,8 +135,9 @@
 						type="text" name="authorNationality" />
 				</div>
 				<div style="margin:10px auto;">
-					<label for="menu_name">简介:</label> 
-					<input name="authorProfile" class="easyui-textbox" data-options="multiline:true"/>
+				
+					简介:
+					<textarea name="authorProfile" rows="3" cols="20" style="height:100px;"></textarea>
 					
 				</div>
 				<p>

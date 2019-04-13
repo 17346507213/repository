@@ -1,14 +1,18 @@
 
 package com.book.service.impl;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.book.mapper.BooksMapper;
-import com.book.service.BooksService;
+import com.book.entity.BooksInfo;
+import com.book.mapper.BooksInfoMapper;
+import com.book.service.BooksInfoService;
+import com.mysql.jdbc.StringUtils;
 
 /** 
 
@@ -20,17 +24,44 @@ import com.book.service.BooksService;
  
 */
 @Service 
-public class BooksServiceImpl implements BooksService{
+public class BooksInfoServiceImpl implements BooksInfoService{
 	@Autowired
-	private BooksMapper booksMapper;
+	private BooksInfoMapper booksInfoMapper;
 	@Override
 	public List<Map<String, Object>> getAllBooks() {
-		return booksMapper.getAllBooks();
+		return booksInfoMapper.getAllBooks();
 	}
 
 	@Override
-	public Map<String, Object> getBooksById(String id) {
-		return this.booksMapper.getBooksById(id);
+	public BooksInfo getBooksById(String id) {
+		return this.booksInfoMapper.getBooksById(id);
+	}
+
+	@Override
+	public Map<String,Object> getAllBooksByPage(int page, int rows) {
+		int startIndex = (page-1)*rows;
+		Map<String,Object> map=new HashMap<String, Object>();
+		map.put("total", this.booksInfoMapper.getAllBoksInfoCount());
+		map.put("rows", this.booksInfoMapper.getAllBooksByPage(startIndex, rows));
+		return map;
+	}
+
+	@Override
+	public int insertOrUpdateBooksInfo(BooksInfo booksInfo) {
+		if(StringUtils.isNullOrEmpty(booksInfo.getId())){
+			booksInfo.setBookState("1");
+			if(booksInfo.getRegisterDate()==null){
+				booksInfo.setRegisterDate(new Date());
+			}
+			return this.booksInfoMapper.insertBooksInfo(booksInfo);
+		}else{
+			return this.booksInfoMapper.updateBooksInfo(booksInfo);
+		}
+	}
+
+	@Override
+	public int deleteBooksInfo(String ids) {
+		return this.booksInfoMapper.deleteBooksInfo(ids);
 	}
 
 }

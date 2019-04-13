@@ -5,20 +5,22 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.book.service.BooksService;
+import com.book.entity.BooksInfo;
+import com.book.service.BooksInfoService;
 /**
  * 图书控制器类
  * @author lilei
  *
  */
 @Controller
-@RequestMapping("/books")
-public class BooksController {
+@RequestMapping("/booksInfo")
+public class BooksInfoController {
 	@Autowired
-	private BooksService booksService;
+	private BooksInfoService booksInfoService;
 	/**
 	 * 获得所有的图书信息
 	 * @return
@@ -26,21 +28,41 @@ public class BooksController {
 	@RequestMapping("/getAllBooks.do")
 	@ResponseBody
 	public List<Map<String,Object>> getAllBooks(){
-		 return this.booksService.getAllBooks();
+		 return this.booksInfoService.getAllBooks();
 	}
-	
+	@RequestMapping("/getAllBooksByPage.do")
+	@ResponseBody
+	public Map<String,Object> getAllBooksByPage(int page, int rows) {
+		return this.booksInfoService.getAllBooksByPage(page, rows);
+	}
 	/**
 	 * 通过id得到图书信息
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping("/getBooksById.do")
+	@RequestMapping("/getBooksInfoById.do")
 	@ResponseBody
-	public Map<String, Object> getBooksById(String id) {
-		return this.booksService.getBooksById(id);
+	public BooksInfo getBooksInfoById(String id) {
+		return this.booksInfoService.getBooksById(id);
 	}
-	@RequestMapping("/booksView.do")
-	public String testView(){
-		return "/books/testView.jsp";
+	/**
+	 * 添加或修改数据
+	 * @param booksInfo
+	 * @return
+	 */
+	@RequestMapping("/insertOrUpdateBooksInfo.do")
+	@ResponseBody
+	public int insertOrUpdateBooksInfo(@RequestBody BooksInfo booksInfo){
+		 return this.booksInfoService.insertOrUpdateBooksInfo(booksInfo);
+	}
+	/**
+	 * 删除图书的数据
+	 * @param ids
+	 * @return
+	 */
+	@RequestMapping("/deleteBooksInfo.do")
+	@ResponseBody
+	public int deleteBooksInfo(String ids){
+		return this.booksInfoService.deleteBooksInfo(ids);
 	}
 }
