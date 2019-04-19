@@ -30,7 +30,7 @@
 		$("#menuTable").datagrid({
 			url:'<%=basePath%>/booksInfo/getAllBooksByPage.do',
 			columns:[[{checkbox:true},
-				{field:"bookType",title:"图书类型",width:60,align:'center'},
+				{field:"bookType",title:"图书分类",width:60,align:'center'},
 				{field:"bookCode",title:"图书编号",width:50,align:'center'},
 				{field:"bookName",title:"图书名称",width:100,align:'center'},
 				{field:"bookAuthor",title:"图书图书",width:100,align:'center'},
@@ -98,13 +98,13 @@
 				if(rows.length==1){
 					$("#menuForm").form("reset");
 					$("#typeAdd").window({
-						width:400,
-						height:400,
+						width:600,
+						height:380,
 						title:"修改图书",
 						iconCls:"icon-add",
 						modal:true
 					});
-					$("#menuForm").form("load","<%=basePath%>/booksAuthor/getBooksAuthorById.do?id="+rows[0].id);
+					$("#menuForm").form("load","<%=basePath%>/booksInfo/getBooksInfoById.do?id="+rows[0].id);
 				}else if(rows.length==0){
 					$.messager.alert("系统提示","请选择记录！");
 				}else{
@@ -115,14 +115,14 @@
 	</script>
 	<div id="typeAdd" style="padding-top: 30px;">
 		<form id="menuForm">
-			<center>
+			
 				<input type="text" name="id" hidden="hidden" />
 				<input type="text" name="bookImage" hidden="hidden" />
 				<input type="text" name="uploadImage" hidden="hidden" />
 				<input type="text" name="bookState" hidden="hidden" />
-				<input type="text" id="client_birthday"
-                    name="registerDate" class="easyui-datebox"></td>
-				<div style="margin:10px auto;">
+				<input type="text" name="registerDate" hidden="hidden" />
+			
+				<div style="margin:20px 70px;">
 					<label for="menu_code">编号:</label> <input  class="easyui-validatebox"
 						type="text" name="bookCode" data-options="required:true" />
 				
@@ -130,36 +130,35 @@
 					<input type="text" name="bookName" class="easyui-validatebox" data-options="required:true"  />
 					
 				</div>
-				<div style="margin:10px auto;">
+				<div style="margin:20px 70px;">
 					<label for="menu_name">作者:</label> <input class="easyui-validatebox"
-						type="text" name="bookAuthor" />
+						type="text" name="bookAuthor" id="bookAuthor" />
 						<label for="menu_name">出版社:</label> <input class="easyui-validatebox"
-						type="text" name="bookPress" />
+						type="text" name="bookPress" id="bookPress" />
 				</div>
-				<div style="margin:10px auto;">
+				<div style="margin:20px 50px;">
 					<label for="menu_name">图书分类:</label> <input class="easyui-validatebox"
-						type="text" name="bookType" />
+						type="text" name="bookType" id="bookType" />
 						<label for="menu_name">图书定价:</label> <input class="easyui-validatebox"
 						type="text" name="bookPrice" />
 				</div>
-				<div style="margin:10px auto;">
+				<div style="margin:20px 50px;">
 					<label for="menu_name">图书位置:</label> <input class="easyui-validatebox"
 						type="text" name="bookAddress" />
 						<label for="menu_name">图书简介:</label> <input class="easyui-validatebox"
 						type="text" name="bookProfile" />
 				</div>
-				<p>
+				<p style="margin:20px 200px;">
 					<a href="javascript:void(0)" class="easyui-linkbutton"
 						id="saveButton" data-options="iconCls:'icon-ok'">确认</a>&nbsp;&nbsp;
 					<a href="javascript:void(0)" class="easyui-linkbutton"
 						id="cancelButton" data-options="iconCls:'icon-cancel'">取消</a>
 				</p>
-			</center>
+			
 		</form>
 	</div>
 	<script type="text/javascript">
 		$("#saveButton").click(function(){
-			alert($("#menuForm").serializeObject());
 			var validate = $("#menuForm").form("validate");
 			if(validate){
 				$.ajax({
@@ -186,6 +185,50 @@
 		});
 		$("#cancelButton").click(function() {
 			$("#typeAdd").window("close");
+		});
+		//下拉列表图书分类
+		$('#bookType').combobox({    
+		    url:'<%=basePath%>/booksType/getAllBooksType.do',    
+		    valueField:'name',    
+		    textField:'name',
+		    panelHeight:'auto',
+		    editable:false
+		});  
+		//图书作者
+		$('#bookAuthor').combogrid({    
+			    panelWidth:330,
+			    panelHeight:300,
+			    idField:'authorName',    
+			    textField:'authorName',    
+			    url:'<%=basePath%>/booksAuthor/getAllBooksAuthorByPage.do',    
+			    columns:[[    
+			        {field:'authorName',title:'姓名',width:60},       
+			        {field:'authorProfile',title:'简介',width:200}    
+			    ]],
+			    fit:true,
+				pagination:true,
+				rownumbers:true
+		}); 
+		$('#bookAuthor').combogrid('textbox').bind('focus',function(){
+			$('#bookAuthor').combogrid("showPanel");
+		});
+		//出版社
+		$('#bookPress').combogrid({    
+			    panelWidth:330,
+			    panelHeight:300,
+			    idField:'pressName',    
+			    textField:'pressName',    
+			    url:'<%=basePath%>/booksPress/getBooksPressByPage.do',    
+			    columns:[[    
+			        {field:'pressName',title:'出版社',width:100},       
+			        {field:'pressAddress',title:'地址',width:160}    
+			    ]],
+			    fit:true,
+				pagination:true,
+				rownumbers:true
+		}); 
+		$('#bookPress').combogrid('textbox').bind('focus',function(){
+			$('#bookPress').combogrid("showPanel");
 		});
 	</script>
 </body>

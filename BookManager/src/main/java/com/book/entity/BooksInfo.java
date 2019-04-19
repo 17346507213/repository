@@ -34,7 +34,7 @@ public class BooksInfo implements Serializable {
     private String bookImage;
     //添加日期
 
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern="yyyy-MM-dd",timezone = "GMT+8")
     private Date registerDate;
     //图书状态（1：正常 2：借出 3：作废）
     private String bookState;
