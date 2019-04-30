@@ -55,10 +55,13 @@ public class BooksPressServiceImpl implements BooksPressService {
 	}
 
 	@Override
-	public Map<String, Object> getBooksPressByPage(int page, int rows) {
+	public Map<String, Object> getBooksPressByPage(int page, int rows,String pressName) {
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("total", this.booksPressMapper.getAllBooksPressCount());
-		map.put("rows", this.booksPressMapper.getAllBooksPressByPage((page-1)*rows, rows));
+		if(pressName!=null){
+			pressName = "%"+pressName+"%";
+		}
+		map.put("total", this.booksPressMapper.getAllBooksPressCount(pressName));
+		map.put("rows", this.booksPressMapper.getAllBooksPressByPage((page-1)*rows, rows,pressName));
 		return map;
 	}
 

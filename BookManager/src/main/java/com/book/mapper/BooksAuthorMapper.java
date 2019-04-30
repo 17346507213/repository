@@ -34,14 +34,17 @@ public interface BooksAuthorMapper {
 	 * @param rows
 	 * @return
 	 */
-	@Select("select * from books_author order by author_name LIMIT #{arg0},#{arg1}")
-	public List<BooksAuthor> getAllBooksAuthorByPage(int startIndex,int rows);
+	@Select("<script>select * from books_author "
+			+"<where><if test='name != null'>and author_name like #{name,jdbcType=VARCHAR}</if></where>"
+			+ " order by author_name LIMIT #{startIndex,jdbcType=INTEGER},#{rows,jdbcType=INTEGER}</script>")
+	public List<BooksAuthor> getAllBooksAuthorByPage(@Param("startIndex") int startIndex,@Param("rows") int rows,@Param("name") String name);
 	/**
 	 * 获得所有的数据条数
 	 * @return
 	 */
-	@Select("select COUNT(books_author.id) from books_author")
-	public int getAllBooksAuthorCount();
+	@Select("<script>select COUNT(books_author.id) from books_author"
+			+"<where><if test='name != null'>and author_name like #{name}</if></where></script>")
+	public int getAllBooksAuthorCount(@Param("name") String name);
 	/**
 	 * 添加数据
 	 * @param BooksAuthor

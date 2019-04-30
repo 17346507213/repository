@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import com.book.entity.BooksAuthor;
 import com.book.mapper.BooksAuthorMapper;
@@ -26,11 +27,14 @@ public class BooksAuthorServiceImpl implements BooksAuthorService {
 	@Autowired
 	private BooksAuthorMapper booksAuthorMapper;
 	@Override
-	public Map<String, Object> getAllBooksAuthorByPage(int page, int rows) {
+	public Map<String, Object> getAllBooksAuthorByPage(int page, int rows,String name) {
+		if(name!=null){
+			name = "%"+name+"%";
+		}
 		int startIndex = (page-1)*rows;
 		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("total", this.booksAuthorMapper.getAllBooksAuthorCount());
-		map.put("rows", this.booksAuthorMapper.getAllBooksAuthorByPage(startIndex, rows));
+		map.put("total", this.booksAuthorMapper.getAllBooksAuthorCount(name));
+		map.put("rows", this.booksAuthorMapper.getAllBooksAuthorByPage(startIndex, rows,name));
 		return map;
 	}
 

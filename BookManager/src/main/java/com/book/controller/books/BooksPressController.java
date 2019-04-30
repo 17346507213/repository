@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.book.entity.BooksPress;
@@ -42,8 +43,8 @@ public class BooksPressController {
 	 */
 	@RequestMapping("/getBooksPressByPage.do")
 	@ResponseBody
-	public Map<String, Object> getBooksPressByPage(int page, int rows) {
-		return this.booksPressService.getBooksPressByPage(page, rows);
+	public Map<String, Object> getBooksPressByPage(int page, int rows,@RequestParam(name="pressName",required=false) String pressName) {
+		return this.booksPressService.getBooksPressByPage(page, rows,pressName);
 	}
 	/**
 	 * 添加或修改数据

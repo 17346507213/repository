@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.book.entity.BooksAuthor;
@@ -27,10 +29,10 @@ import com.book.service.BooksAuthorService;
 public class BooksAuthorController {
 	@Autowired
 	private BooksAuthorService booksAuthorService;
-	@RequestMapping("/getAllBooksAuthorByPage.do")
+	@RequestMapping(value="/getAllBooksAuthorByPage.do",method={RequestMethod.GET,RequestMethod.POST})
 	@ResponseBody
-	public Map<String, Object> getAllBooksAuthorByPage(int page, int rows) {
-		return this.booksAuthorService.getAllBooksAuthorByPage(page, rows);
+	public Map<String, Object> getAllBooksAuthorByPage(int page, int rows,@RequestParam(name="name",required=false) String name) {
+		return this.booksAuthorService.getAllBooksAuthorByPage(page, rows,name);
 	}
 	@RequestMapping("/insertOrUpdateBooksAuthor.do")
 	@ResponseBody

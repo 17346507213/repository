@@ -207,8 +207,27 @@
 			    ]],
 			    fit:true,
 				pagination:true,
-				rownumbers:true
+				rownumbers:true,
+				toolbar:[
+					{text:'<label>姓名：</label><input id="searchText" type="text" />'}
+				,{iconCls:'icon-search',text:"查询",id:"searchBtn",handler:function(){
+					var authorName = $('#searchText').val();
+					authorName = authorName ? authorName.trim() : "";
+					if(authorName){
+						$("#bookAuthor").combogrid("grid").datagrid("load",{
+							name:authorName
+						});
+					}else{
+						$("#bookAuthor").combogrid("grid").datagrid("load",{});
+					}
+			}}]
 		}); 
+		//
+		$("#searchText").keyup(function(event){
+			if(event.keyCode==13){
+				$("#searchBtn").click();
+			}
+		});
 		$('#bookAuthor').combogrid('textbox').bind('focus',function(){
 			$('#bookAuthor').combogrid("showPanel");
 		});
@@ -225,11 +244,30 @@
 			    ]],
 			    fit:true,
 				pagination:true,
-				rownumbers:true
+				rownumbers:true,
+				toolbar:[
+					{text:'<label>出版社：</label><input id="searchPressName" type="text" />'}
+				,{iconCls:'icon-search',text:"查询",id:"searchPressBtn",handler:function(){
+					var pressName = $('#searchPressName').val();
+					pressName = pressName ? pressName.trim() : "";
+					if(pressName){
+						$("#bookPress").combogrid("grid").datagrid("load",{
+							pressName:pressName
+						});
+					}else{
+						$("#bookPress").combogrid("grid").datagrid("load",{});
+					}
+			}}]
 		}); 
+		$("#searchPressName").keyup(function(event){
+			if(event.keyCode==13){
+				$("#searchPressBtn").click();
+			}
+		});
 		$('#bookPress').combogrid('textbox').bind('focus',function(){
 			$('#bookPress').combogrid("showPanel");
 		});
+		
 	</script>
 </body>
 </html>

@@ -52,5 +52,5 @@ public interface BooksPressService {
 	 * @param rows 每页显示多少条
 	 * @return
 	 */
-	public Map<String,Object> getBooksPressByPage(int page,int rows);
+	public Map<String,Object> getBooksPressByPage(int page,int rows,String pressName);
 }

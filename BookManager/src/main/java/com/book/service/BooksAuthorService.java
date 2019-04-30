@@ -30,7 +30,7 @@ public interface BooksAuthorService {
 	 * @param rows
 	 * @return
 	 */
-	public Map<String,Object> getAllBooksAuthorByPage(int page,int rows);
+	public Map<String,Object> getAllBooksAuthorByPage(int page,int rows,String name);
 	
 	/**
 	 * 添加数据

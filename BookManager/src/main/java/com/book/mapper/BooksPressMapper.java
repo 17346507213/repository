@@ -7,7 +7,9 @@ import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.SelectProvider;
 import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.jdbc.SQL;
 
 import com.book.entity.BooksPress;
 
@@ -34,14 +36,16 @@ public interface BooksPressMapper {
 	 * @param rows
 	 * @return
 	 */
-	@Select("select * from books_press order by press_name LIMIT #{arg0},#{arg1}")
-	public List<BooksPress> getAllBooksPressByPage(int startIndex,int rows);
+	@SelectProvider(type=BooksPressMapperProvider.class,method="getAllBooksPressByPageSql")
+	public List<BooksPress> getAllBooksPressByPage(int startIndex,int rows, String pressName);
+	
+	
 	/**
 	 * 获得所有的数据条数
 	 * @return
 	 */
-	@Select("select COUNT(books_press.id) from books_press")
-	public int getAllBooksPressCount();
+	@SelectProvider(type=BooksPressMapperProvider.class,method="getAllBooksPressByPageCountSql")
+	public int getAllBooksPressCount(String pressName);
 	/**
 	 * 添加数据
 	 * @param BooksPress
@@ -70,4 +74,41 @@ public interface BooksPressMapper {
 	 */
 	@Delete("DELETE from books_press where id in(${ids})")
 	public int deleteBooksPress(@Param(value="ids") String ids);
+	/**
+	 * 用于动态生成sql语句
+	 * @author lilei 
+	 *
+	 */
+	class BooksPressMapperProvider{
+		/**
+		 * 分页查询，并且按照条件查询数据
+		 * @param startIndex
+		 * @param rows
+		 * @param name
+		 * @return
+		 */
+		public String getAllBooksPressByPageSql(int startIndex,int rows,final String pressName){
+			return new SQL(){{
+				SELECT("*");
+				FROM("books_press");
+				if(pressName!=null){
+					WHERE("press_name like #{arg2,jdbcType=VARCHAR}");
+				}
+				ORDER_BY("press_name");
+			}}.toString()+" LIMIT #{arg0,jdbcType=INTEGER},#{arg1,jdbcType=INTEGER}";
+		}
+		/**
+		 * 查询数据条数
+		 * @return
+		 */
+		public String getAllBooksPressByPageCountSql(final String pressName){
+			return new SQL(){{
+				SELECT("COUNT(books_press.id)");
+				FROM("books_press");
+				if(pressName!=null){
+					WHERE("press_name like #{arg0,jdbcType=VARCHAR}");
+				}
+			}}.toString();
+		}
+	}
 }
